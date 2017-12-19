@@ -1,0 +1,138 @@
+<your_group_name> = cwu57, elvelez2...
+
+Instruction
+============
+List at least 1 code smell for each question.
+List at least 1 code example for each code smell.
+Explain the code smell in each example with 1 or 2 sentences. 
+(e.g. the process of ... appears 2 times in ... method.)
+
+Answer to Q1
+============
+We found the following code smell(s): duplicated code, switch statements
+
+Here are some example(s) of each code smell: 
+
+Name: DUPLICATED CODE
+
+Example 1: In the network class, method requestWorkstationPrintsDocument,
+           there is a duplicate code for logging passing packets. We refactored this into a method called logNodePass.
+Code: 
+			try {
+    			report.write("\tNode '");
+    			report.write(startNode.name);
+    			report.write("' passes packet on.\n");
+    			report.flush();
+    		} catch (IOException exc) {
+    			// just ignore
+    		}
+
+    		currentNode = startNode.nextNode;
+    		while ((!packet.destination.equals(currentNode.name))
+    				& (!packet.origin.equals(currentNode.name))) {
+    			try {
+    				report.write("\tNode '");
+    				report.write(currentNode.name);
+    				report.write("' passes packet on.\n");
+    				report.flush();
+    			} catch (IOException exc) {
+    				// just ignore
+    			}
+
+Name: SWITCH STATEMENTS
+
+Example 1:In the network class, method printOn, printHTMLOn, printXMLOn,
+          there are switch statements. We refactored this into three methods in each subclasses called printOn, printHTMLOn, printXMLOn.
+Code: 
+		/**
+    	 * Write a printable representation of #receiver on the given #buf.
+    	 */
+    	public void printOn(StringBuffer buf) {
+    		Node currentNode = firstNode;
+    		do {
+    			switch (currentNode.type) {
+    			case Node.NODE:
+    				buf.append("Node ");
+    				buf.append(currentNode.name);
+    				buf.append(" [Node]");
+    				break;
+    			case Node.WORKSTATION:
+    				buf.append("Workstation ");
+    				buf.append(currentNode.name);
+    				buf.append(" [Workstation]");
+    				break;
+    			case Node.PRINTER:
+    				buf.append("Printer ");
+    				buf.append(currentNode.name);
+    				buf.append(" [Printer]");
+    				break;
+    			default:
+    				buf.append("(Unexpected)");
+    				break;
+    			}
+    			buf.append(" -> ");
+    			currentNode = currentNode.nextNode;
+    		} while (currentNode != firstNode);
+    		buf.append(" ... ");
+    	}
+
+Answer to Q2
+============
+We found the following code smell(s): FEATURE ENVY
+
+Here are some example(s) of each code smell: 
+Name: FEATURE ENVY
+Example 1: In the network class, the logNodePass method does not belong to the Network class, because it only references Node attributes.
+           We moved this into Node class.
+code:
+/**
+	 * Write printable representation of #node to #report.
+	 */
+	private void logNodePass(Writer report, Node node) throws IOException {
+		report.write("\tNode '");
+		report.write(node.name);
+		report.write("' passes packet on.\n");
+		report.flush();
+	}
+
+Answer to Q3
+============
+We found the following code smell(s): DUPLICATED CODE
+
+Here are some example(s) of each code smell: 
+Name: DUPLICATED CODE
+Example 1:In the network class, method requestWorkstationPrintsDocument,
+          there is a duplicate code for checking is the node is the last node. We refactored this into a method called atDestination.
+code:
+do{...}
+while (!packet.destination.equals(currentNode.name));
+
+
+Answer to Q4
+============
+We found the following code smell(s): TYPE CHECKING
+
+Here are some example(s) of each code smell:
+Name: TYPE CHECKING
+Example 1:In the network class, there is a switch statement used for type checking. We refactored this into corresponding subclasses.
+code:
+switch (node.type) {
+        case Node.NODE:
+            buf.append("Node ");
+            buf.append(node.name);
+            buf.append(" [Node]");
+            break;
+        case Node.WORKSTATION:
+            buf.append("Workstation ");
+            buf.append(node.name);
+            buf.append(" [Workstation]");
+            break;
+        case Node.PRINTER:
+            buf.append("Printer ");
+            buf.append(node.name);
+            buf.append(" [Printer]");
+            break;
+        default:
+            buf.append("(Unexpected)");
+            break;
+        }
