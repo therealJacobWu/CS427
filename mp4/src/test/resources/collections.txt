@@ -1,0 +1,3 @@
+[testCollection1,<cs411;mike1/[subCollection1,<cs427;jack1/>]/>]
+[testCollection2,<cs412;mike2/[subCollection2,<cs428;jack2/>]/>]
+[testCollection3,<cs413;mike3/[subCollection3,<cs429;jack3/>]/>]
